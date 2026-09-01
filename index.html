@@ -5,15 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>NexoChat</title>
-    <meta name="description" content="NexoChat – chat, správy a hovory na jednom mieste.">
+    <meta
+        name="description"
+        content="NexoChat – chat, správy a hovory na jednom mieste."
+    >
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- Horná lišta -->
+    <!-- ==============================
+         HORNÁ LIŠTA
+    =============================== -->
+
     <header class="navbar">
+
         <div class="logo">
             NexoChat
         </div>
@@ -24,13 +31,20 @@
             <a href="/calls">Volania</a>
             <a href="/profile">Profil</a>
         </nav>
+
     </header>
 
-    <!-- Hlavná stránka -->
+
+    <!-- ==============================
+         HLAVNÁ STRÁNKA
+    =============================== -->
+
     <main id="home">
 
         <section class="hero">
+
             <div class="hero-content">
+
                 <h1>Vitaj v NexoChat 👋</h1>
 
                 <p>
@@ -39,45 +53,118 @@
                 </p>
 
                 <div class="hero-buttons">
+
                     <button id="loginButton">
-                        Prihlásiť sa
+                        🔐 Prihlásiť sa
                     </button>
 
                     <button id="registerButton">
-                        Vytvoriť účet
+                        👤 Vytvoriť účet
                     </button>
+
                 </div>
+
             </div>
+
         </section>
 
-        <!-- Funkcie -->
+
+        <!-- ==============================
+             FUNKCIE
+        =============================== -->
+
         <section class="features">
 
-            <div class="feature">
+            <div class="feature" id="messages">
+
                 <h2>💬 Správy</h2>
-                <p>Posielaj správy svojim priateľom.</p>
+
+                <p>
+                    Posielaj správy svojim priateľom
+                    v reálnom čase.
+                </p>
+
             </div>
 
-            <div class="feature">
+
+            <div class="feature" id="calls">
+
                 <h2>📞 Hovory</h2>
-                <p>Uskutočňuj hlasové a video hovory.</p>
+
+                <p>
+                    Uskutočňuj hlasové a video hovory.
+                </p>
+
             </div>
 
+
             <div class="feature">
+
                 <h2>🖥️ Zdieľanie obrazovky</h2>
-                <p>Zdieľaj svoju obrazovku počas hovoru.</p>
+
+                <p>
+                    Zdieľaj svoju obrazovku počas hovoru.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <h2>📷 Obrázky</h2>
+
+                <p>
+                    Posielaj fotografie a obrázky
+                    svojim kontaktom.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <h2>📎 Prílohy</h2>
+
+                <p>
+                    Posielaj súbory a ďalšie prílohy.
+                </p>
+
+            </div>
+
+
+            <div class="feature" id="profile">
+
+                <h2>👤 Profil</h2>
+
+                <p>
+                    Vytvor si vlastný NexoChat profil.
+                </p>
+
             </div>
 
         </section>
 
     </main>
 
-    <!-- Pätička -->
+
+    <!-- ==============================
+         PÄTIČKA
+    =============================== -->
+
     <footer>
-        <p>© 2026 NexoChat</p>
+
+        <p>
+            © 2026 NexoChat
+        </p>
+
     </footer>
 
-    <script src="app.js"></script>
+
+    <!-- ==============================
+         JAVASCRIPT
+    =============================== -->
+
+    <script type="module" src="app.js"></script>
 
 </body>
 </html>
