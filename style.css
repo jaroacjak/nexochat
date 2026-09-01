@@ -127,6 +127,78 @@ button:active {
 }
 
 /* ==========================================
+   AUTHENTIFIKÁCIA
+   ========================================== */
+
+.auth-section {
+    width: 100%;
+    padding: 30px 20px 60px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.auth-card h2 {
+    margin-bottom: 12px;
+}
+
+.auth-card > p {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.auth-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.auth-card label {
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.auth-card input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    background: #ffffff;
+}
+
+.auth-card input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.auth-card form button {
+    margin-top: 10px;
+}
+
+.auth-message {
+    min-height: 24px;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+.secondary-button {
+    margin-top: 10px;
+    background: #6b7280;
+    width: 100%;
+}
+
+/* ==========================================
    FEATURES
    ========================================== */
 
@@ -384,6 +456,10 @@ footer {
     .message {
         max-width: 85%;
     }
+
+    .auth-card {
+        padding: 25px;
+    }
 }
 
 @media (max-width: 450px) {
@@ -412,5 +488,14 @@ footer {
 
     .feature {
         padding: 24px;
+    }
+
+    .auth-section {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .auth-card {
+        padding: 20px;
     }
 }
