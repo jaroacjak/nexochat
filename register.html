@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrácia – NexoChat</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1877f2, #6c5ce7);
+            color: #222;
+        }
+
+        .register-box {
+            width: 90%;
+            max-width: 420px;
+            background: white;
+            padding: 35px 28px;
+            border-radius: 22px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 15px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1877f2;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1877f2;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #1877f2;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 12px;
+            background: #1877f2;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .register-btn:hover {
+            background: #1264d6;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .login-link a {
+            color: #1877f2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #777;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back:hover,
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="register-box">
+
+        <div class="logo">N</div>
+
+        <h1>Vytvor účet</h1>
+
+        <p class="subtitle">
+            Pridaj sa k NexoChat
+        </p>
+
+        <form>
+
+            <div class="input-group">
+                <label for="name">Meno</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Tvoje meno"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="email">E-mail</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="tvoj@email.sk"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="username">Používateľské meno</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="@pouzivatel"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="password">Heslo</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Vytvor heslo"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="password2">Potvrď heslo</label>
+                <input
+                    type="password"
+                    id="password2"
+                    name="password2"
+                    placeholder="Zopakuj heslo"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="register-btn">
+                Vytvoriť účet
+            </button>
+
+        </form>
+
+        <p class="login-link">
+            Už máš účet?
+            <a href="login.html">Prihlásiť sa</a>
+        </p>
+
+        <a href="index.html" class="back">
+            ← Späť na úvod
+        </a>
+
+    </main>
+
+</body>
+</html>
