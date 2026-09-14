@@ -3,356 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>NexoChat</title>
 
-    <meta
-        name="description"
-        content="NexoChat – chat, správy a hovory na jednom mieste."
-    >
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    <link rel="stylesheet" href="style.css">
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1877f2, #6c5ce7);
+            color: white;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            padding: 40px 25px;
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+            border-radius: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            color: #1877f2;
+            font-size: 42px;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 17px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .login {
+            background: white;
+            color: #1877f2;
+        }
+
+        .register {
+            border: 2px solid white;
+            color: white;
+            background: transparent;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.92;
+        }
+
+        .footer {
+            margin-top: 35px;
+            font-size: 13px;
+            opacity: 0.7;
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- ==============================
-         HORNÁ LIŠTA
-    =============================== -->
+    <main class="container">
 
-    <header class="navbar">
+        <div class="logo">N</div>
 
-        <div class="logo">
-            NexoChat
+        <h1>NexoChat</h1>
+
+        <p class="subtitle">
+            Spoj sa s ľuďmi, na ktorých ti záleží.
+        </p>
+
+        <div class="buttons">
+
+            <a href="login.html" class="btn login">
+                Prihlásiť sa
+            </a>
+
+            <a href="register.html" class="btn register">
+                Registrácia
+            </a>
+
         </div>
 
-        <nav>
-            <a href="#home">Domov</a>
-            <a href="#messages">Správy</a>
-            <a href="#calls">Volania</a>
-            <a href="#profile">Profil</a>
-        </nav>
-
-    </header>
-
-
-    <!-- ==============================
-         HLAVNÁ STRÁNKA
-    =============================== -->
-
-    <main id="home">
-
-        <section class="hero">
-
-            <div class="hero-content">
-
-                <h1>Vitaj v NexoChat 👋</h1>
-
-                <p>
-                    Píš si s priateľmi, uskutočňuj hovory
-                    a zostaň vždy v spojení.
-                </p>
-
-                <div class="hero-buttons">
-
-                    <button id="loginButton">
-                        🔐 Prihlásiť sa
-                    </button>
-
-                    <button id="registerButton">
-                        👤 Vytvoriť účet
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ==============================
-             PRIHLÁSENIE
-        =============================== -->
-
-        <section
-            id="loginForm"
-            class="auth-section"
-            hidden
-        >
-
-            <div class="auth-card">
-
-                <h2>🔐 Prihlásenie</h2>
-
-                <p>
-                    Prihlás sa do svojho NexoChat účtu.
-                </p>
-
-                <form id="loginFormElement">
-
-                    <label for="loginEmail">
-                        E-mail
-                    </label>
-
-                    <input
-                        type="email"
-                        id="loginEmail"
-                        placeholder="tvoj@email.sk"
-                        autocomplete="email"
-                        required
-                    >
-
-                    <label for="loginPassword">
-                        Heslo
-                    </label>
-
-                    <input
-                        type="password"
-                        id="loginPassword"
-                        placeholder="Tvoje heslo"
-                        autocomplete="current-password"
-                        required
-                    >
-
-                    <button type="submit">
-                        Prihlásiť sa
-                    </button>
-
-                </form>
-
-                <p
-                    id="loginMessage"
-                    class="auth-message"
-                    aria-live="polite"
-                ></p>
-
-                <button
-                    type="button"
-                    id="closeLoginButton"
-                    class="secondary-button"
-                >
-                    Zavrieť
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- ==============================
-             REGISTRÁCIA
-        =============================== -->
-
-        <section
-            id="registerForm"
-            class="auth-section"
-            hidden
-        >
-
-            <div class="auth-card">
-
-                <h2>👤 Vytvoriť účet</h2>
-
-                <p>
-                    Vytvor si svoj NexoChat účet.
-                </p>
-
-                <form id="registerFormElement">
-
-                    <label for="registerName">
-                        Meno
-                    </label>
-
-                    <input
-                        type="text"
-                        id="registerName"
-                        placeholder="Tvoje meno"
-                        autocomplete="name"
-                        required
-                    >
-
-                    <label for="registerEmail">
-                        E-mail
-                    </label>
-
-                    <input
-                        type="email"
-                        id="registerEmail"
-                        placeholder="tvoj@email.sk"
-                        autocomplete="email"
-                        required
-                    >
-
-                    <label for="registerPassword">
-                        Heslo
-                    </label>
-
-                    <input
-                        type="password"
-                        id="registerPassword"
-                        placeholder="Vytvor heslo"
-                        autocomplete="new-password"
-                        minlength="8"
-                        required
-                    >
-
-                    <button type="submit">
-                        Vytvoriť účet
-                    </button>
-
-                </form>
-
-                <p
-                    id="registerMessage"
-                    class="auth-message"
-                    aria-live="polite"
-                ></p>
-
-                <button
-                    type="button"
-                    id="closeRegisterButton"
-                    class="secondary-button"
-                >
-                    Zavrieť
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- ==============================
-             FUNKCIE
-        =============================== -->
-
-        <section class="features">
-
-            <!-- ==============================
-                 SPRÁVY
-            =============================== -->
-
-            <div
-                class="feature"
-                id="messages"
-            >
-
-                <h2>💬 Správy</h2>
-
-                <p>
-                    Posielaj správy svojim priateľom
-                    v reálnom čase.
-                </p>
-
-            </div>
-
-
-            <!-- ==============================
-                 VOLANIA
-            =============================== -->
-
-            <div
-                class="feature"
-                id="calls"
-            >
-
-                <h2>📞 Hovory</h2>
-
-                <p>
-                    Uskutočňuj hlasové a video hovory.
-                </p>
-
-            </div>
-
-
-            <!-- ==============================
-                 ZDIEĽANIE OBRAZOVKY
-            =============================== -->
-
-            <div class="feature">
-
-                <h2>🖥️ Zdieľanie obrazovky</h2>
-
-                <p>
-                    Zdieľaj svoju obrazovku počas hovoru.
-                </p>
-
-            </div>
-
-
-            <!-- ==============================
-                 OBRÁZKY
-            =============================== -->
-
-            <div class="feature">
-
-                <h2>📷 Obrázky</h2>
-
-                <p>
-                    Posielaj fotografie a obrázky
-                    svojim kontaktom.
-                </p>
-
-            </div>
-
-
-            <!-- ==============================
-                 PRÍLOHY
-            =============================== -->
-
-            <div class="feature">
-
-                <h2>📎 Prílohy</h2>
-
-                <p>
-                    Posielaj súbory a ďalšie prílohy.
-                </p>
-
-            </div>
-
-
-            <!-- ==============================
-                 PROFIL
-            =============================== -->
-
-            <div
-                class="feature"
-                id="profile"
-            >
-
-                <h2>👤 Profil</h2>
-
-                <p>
-                    Vytvor si vlastný NexoChat profil.
-                </p>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- ==============================
-         PÄTIČKA
-    =============================== -->
-
-    <footer>
-
-        <p>
+        <p class="footer">
             © 2026 NexoChat
         </p>
 
-    </footer>
-
-
-    <!-- ==============================
-         JAVASCRIPT
-    =============================== -->
-
-    <script
-        type="module"
-        src="app.js"
-    ></script>
+    </main>
 
 </body>
 </html>
