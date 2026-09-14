@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prihlásenie – NexoChat</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1877f2, #6c5ce7);
+            color: #222;
+        }
+
+        .login-box {
+            width: 90%;
+            max-width: 420px;
+            background: white;
+            padding: 35px 28px;
+            border-radius: 22px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 15px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1877f2;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1877f2;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #1877f2;
+        }
+
+        .forgot {
+            display: block;
+            text-align: right;
+            margin-top: -7px;
+            margin-bottom: 20px;
+            color: #1877f2;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: #1877f2;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background: #1264d6;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .register-link a {
+            color: #1877f2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #777;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="login-box">
+
+        <div class="logo">N</div>
+
+        <h1>Vitaj späť</h1>
+
+        <p class="subtitle">
+            Prihlás sa do NexoChat
+        </p>
+
+        <form>
+
+            <div class="input-group">
+                <label for="email">E-mail alebo používateľské meno</label>
+
+                <input
+                    type="text"
+                    id="email"
+                    name="email"
+                    placeholder="E-mail alebo @používateľ"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="password">Heslo</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Tvoje heslo"
+                    required
+                >
+            </div>
+
+            <a href="#" class="forgot">
+                Zabudol/a si heslo?
+            </a>
+
+            <button type="submit" class="login-btn">
+                Prihlásiť sa
+            </button>
+
+        </form>
+
+        <p class="register-link">
+            Nemáš ešte účet?
+            <a href="register.html">Zaregistrovať sa</a>
+        </p>
+
+        <a href="index.html" class="back">
+            ← Späť na úvod
+        </a>
+
+    </main>
+
+</body>
+</html>
