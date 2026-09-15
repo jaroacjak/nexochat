@@ -111,6 +111,26 @@
             background: #1264d6;
         }
 
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .message.error {
+            display: block;
+            background: #ffe5e5;
+            color: #c62828;
+        }
+
         .register-link {
             text-align: center;
             margin-top: 22px;
@@ -155,7 +175,7 @@
             Prihlás sa do NexoChat
         </p>
 
-        <form>
+        <form id="loginForm">
 
             <div class="input-group">
                 <label for="email">E-mail alebo používateľské meno</label>
@@ -165,6 +185,7 @@
                     id="email"
                     name="email"
                     placeholder="E-mail alebo @používateľ"
+                    autocomplete="username"
                     required
                 >
             </div>
@@ -177,15 +198,18 @@
                     id="password"
                     name="password"
                     placeholder="Tvoje heslo"
+                    autocomplete="current-password"
                     required
                 >
             </div>
 
-            <a href="#" class="forgot">
+            <div id="loginMessage" class="message"></div>
+
+            <a href="#" class="forgot" id="forgotPassword">
                 Zabudol/a si heslo?
             </a>
 
-            <button type="submit" class="login-btn">
+            <button type="submit" class="login-btn" id="loginBtn">
                 Prihlásiť sa
             </button>
 
@@ -201,6 +225,8 @@
         </a>
 
     </main>
+
+    <script type="module" src="auth.js"></script>
 
 </body>
 </html>
