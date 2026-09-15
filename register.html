@@ -98,6 +98,26 @@
             background: #1264d6;
         }
 
+        .register-btn:disabled {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .message {
+            display: none;
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .message.error {
+            display: block;
+            background: #ffe5e5;
+            color: #c62828;
+        }
+
         .login-link {
             text-align: center;
             margin-top: 22px;
@@ -139,66 +159,97 @@
             Pridaj sa k NexoChat
         </p>
 
-        <form>
+        <form id="registerForm">
 
             <div class="input-group">
-                <label for="name">Meno</label>
+                <label for="firstName">Meno</label>
+
                 <input
                     type="text"
-                    id="name"
-                    name="name"
+                    id="firstName"
+                    name="firstName"
                     placeholder="Tvoje meno"
+                    autocomplete="given-name"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="lastName">Priezvisko</label>
+
+                <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    placeholder="Tvoje priezvisko"
+                    autocomplete="family-name"
                     required
                 >
             </div>
 
             <div class="input-group">
                 <label for="email">E-mail</label>
+
                 <input
                     type="email"
                     id="email"
                     name="email"
                     placeholder="tvoj@email.sk"
+                    autocomplete="email"
                     required
                 >
             </div>
 
             <div class="input-group">
                 <label for="username">Používateľské meno</label>
+
                 <input
                     type="text"
                     id="username"
                     name="username"
                     placeholder="@pouzivatel"
+                    autocomplete="username"
                     required
                 >
             </div>
 
             <div class="input-group">
                 <label for="password">Heslo</label>
+
                 <input
                     type="password"
                     id="password"
                     name="password"
                     placeholder="Vytvor heslo"
+                    autocomplete="new-password"
+                    minlength="6"
                     required
                 >
             </div>
 
             <div class="input-group">
-                <label for="password2">Potvrď heslo</label>
+                <label for="confirmPassword">Potvrď heslo</label>
+
                 <input
                     type="password"
-                    id="password2"
-                    name="password2"
+                    id="confirmPassword"
+                    name="confirmPassword"
                     placeholder="Zopakuj heslo"
+                    autocomplete="new-password"
+                    minlength="6"
                     required
                 >
             </div>
 
-            <button type="submit" class="register-btn">
+            <button
+                type="submit"
+                class="register-btn"
+                id="registerBtn"
+            >
                 Vytvoriť účet
             </button>
+
+            <div id="registerMessage" class="message"></div>
 
         </form>
 
@@ -212,6 +263,8 @@
         </a>
 
     </main>
+
+    <script type="module" src="auth.js"></script>
 
 </body>
 </html>
