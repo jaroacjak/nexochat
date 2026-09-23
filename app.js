@@ -29,9 +29,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
 
 
-/* ==========================================
+/* =========================
    FIREBASE
-========================================== */
+========================= */
 
 const firebaseConfig = {
     apiKey: "AIzaSyDijyOClNir_WcUOBfgCXmk0gNkrL_QBW4",
@@ -50,52 +50,87 @@ const db = getFirestore(firebaseApp);
 const storage = getStorage(firebaseApp);
 
 
-/* ==========================================
+/* =========================
    PREMENNÉ
-========================================== */
+========================= */
 
 let currentUser = null;
 let selectedUser = null;
+
 let unsubscribeMessages = null;
 let unsubscribeChats = null;
+
 let searchTimer = null;
 
 
-/* ==========================================
-   HTML ELEMENTY
-========================================== */
+/* =========================
+   ELEMENTY
+========================= */
 
-const searchInput = document.getElementById("searchInput");
-const suggestions = document.getElementById("suggestions");
-const chatList = document.getElementById("chatList");
+const searchInput =
+    document.getElementById("searchInput");
 
-const welcome = document.getElementById("welcome");
-const chatWindow = document.getElementById("chatWindow");
+const suggestions =
+    document.getElementById("suggestions");
 
-const messages = document.getElementById("messages");
-const messageInput = document.getElementById("messageInput");
-const messageForm = document.getElementById("messageForm");
+const chatList =
+    document.getElementById("chatList");
 
-const fileInput = document.getElementById("fileInput");
-const attachBtn = document.getElementById("attachBtn");
+const welcome =
+    document.getElementById("welcome");
 
-const profileBtn = document.getElementById("profileBtn");
-const profileInfo = document.getElementById("profileInfo");
-const profileName = document.getElementById("profileName");
-const profileEmail = document.getElementById("profileEmail");
-const logoutBtn = document.getElementById("logoutBtn");
+const chatWindow =
+    document.getElementById("chatWindow");
 
-const chatName = document.getElementById("chatName");
-const chatAvatar = document.getElementById("chatAvatar");
+const messages =
+    document.getElementById("messages");
 
-const callBtn = document.getElementById("callBtn");
-const callModal = document.getElementById("callModal");
-const closeCallBtn = document.getElementById("closeCallBtn");
+const messageInput =
+    document.getElementById("messageInput");
+
+const messageForm =
+    document.getElementById("messageForm");
+
+const fileInput =
+    document.getElementById("fileInput");
+
+const attachBtn =
+    document.getElementById("attachBtn");
+
+const profileBtn =
+    document.getElementById("profileBtn");
+
+const profileInfo =
+    document.getElementById("profileInfo");
+
+const profileName =
+    document.getElementById("profileName");
+
+const profileEmail =
+    document.getElementById("profileEmail");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+const chatName =
+    document.getElementById("chatName");
+
+const chatAvatar =
+    document.getElementById("chatAvatar");
+
+const callBtn =
+    document.getElementById("callBtn");
+
+const callModal =
+    document.getElementById("callModal");
+
+const closeCallBtn =
+    document.getElementById("closeCallBtn");
 
 
-/* ==========================================
+/* =========================
    PRIHLÁSENIE
-========================================== */
+========================= */
 
 onAuthStateChanged(auth, async (user) => {
 
@@ -106,41 +141,48 @@ onAuthStateChanged(auth, async (user) => {
 
     currentUser = user;
 
-    profileEmail.textContent = user.email || "";
-
     await loadCurrentUser();
+
     loadChats();
 });
 
 
-/* ==========================================
-   NAČÍTANIE VLASTNÉHO PROFILU
-========================================== */
+/* =========================
+   NAČÍTANIE PROFILU
+========================= */
 
 async function loadCurrentUser() {
 
     try {
 
-        const userRef = doc(
-            db,
-            "users",
-            currentUser.uid
-        );
+        const userRef =
+            doc(db, "users", currentUser.uid);
 
-        const snapshot = await getDoc(userRef);
+        const userSnap =
+            await getDoc(userRef);
 
-        if (!snapshot.exists()) {
-            profileName.textContent = "Používateľ";
-            return;
+        if (userSnap.exists()) {
+
+            const data =
+                userSnap.data();
+
+            const fullName =
+                `${data.firstName || ""} ${data.lastName || ""}`.trim();
+
+            profileName.textContent =
+                fullName || "Používateľ";
+
+            profileEmail.textContent =
+                data.email || currentUser.email || "—";
+
+        } else {
+
+            profileName.textContent =
+                currentUser.displayName || "Používateľ";
+
+            profileEmail.textContent =
+                currentUser.email || "—";
         }
-
-        const data = snapshot.data();
-
-        const name =
-            `${data.firstName || ""} ${data.lastName || ""}`.trim();
-
-        profileName.textContent =
-            name || "Používateľ";
 
     } catch (error) {
 
@@ -148,13 +190,14 @@ async function loadCurrentUser() {
             "Chyba pri načítaní profilu:",
             error
         );
+
     }
 }
 
 
-/* ==========================================
-   NAŠEPKÁVAČ VYHĽADÁVANIA
-========================================== */
+/* =========================
+   VYHĽADÁVANIE
+========================= */
 
 searchInput.addEventListener("input", () => {
 
@@ -165,155 +208,101 @@ searchInput.addEventListener("input", () => {
 
     if (value.length < 2) {
 
-        suggestions.style.display = "none";
+        suggestions.style.display =
+            "none";
+
         suggestions.innerHTML = "";
 
         return;
     }
 
-    suggestions.style.display = "block";
+    searchTimer =
+        setTimeout(() => {
 
-    suggestions.innerHTML = `
-        <div class="suggestions-title">
-            Hľadám používateľov...
-        </div>
-    `;
+            searchUsers(value);
 
-    searchTimer = setTimeout(() => {
-        searchUsers(value);
-    }, 300);
+        }, 300);
 });
 
 
-/* ==========================================
-   VYHĽADANIE POUŽÍVATEĽOV
-========================================== */
+/* =========================
+   HĽADANIE POUŽÍVATEĽOV
+========================= */
 
 async function searchUsers(value) {
 
     try {
 
-        const snapshot = await getDocs(
-            collection(db, "users")
-        );
-
         suggestions.innerHTML = `
-            <div class="suggestions-title">
-                Používatelia
+            <div class="loading">
+                Hľadám...
             </div>
         `;
 
-        const search =
-            value.toLowerCase();
+        suggestions.style.display =
+            "block";
 
-        let found = false;
+        const usersRef =
+            collection(db, "users");
+
+        const snapshot =
+            await getDocs(usersRef);
+
+        const search =
+            value
+                .toLowerCase()
+                .replace("@", "")
+                .trim();
+
+        const results = [];
 
         snapshot.forEach((userDoc) => {
 
-            const data = userDoc.data();
+            const user =
+                userDoc.data();
 
             if (
-                data.uid ===
-                currentUser.uid
+                user.uid === currentUser.uid
             ) {
                 return;
             }
 
             const firstName =
-                String(data.firstName || "");
+                String(user.firstName || "")
+                    .toLowerCase();
 
             const lastName =
-                String(data.lastName || "");
+                String(user.lastName || "")
+                    .toLowerCase();
 
             const username =
-                String(data.username || "");
+                String(user.username || "")
+                    .toLowerCase()
+                    .replace("@", "");
 
             const email =
-                String(data.email || "");
+                String(user.email || "")
+                    .toLowerCase();
 
             const fullName =
-                `${firstName} ${lastName}`.trim();
+                `${firstName} ${lastName}`;
 
-            const searchable =
-                `
-                ${firstName}
-                ${lastName}
-                ${fullName}
-                ${username}
-                ${email}
-                `
-                .toLowerCase();
+            if (
+                firstName.includes(search) ||
+                lastName.includes(search) ||
+                fullName.includes(search) ||
+                username.includes(search) ||
+                email.includes(search)
+            ) {
 
-            if (!searchable.includes(search)) {
-                return;
+                results.push({
+                    id: userDoc.id,
+                    ...user
+                });
             }
-
-            found = true;
-
-            const initials =
-                getInitials(fullName);
-
-            const result =
-                document.createElement("div");
-
-            result.className = "suggestion";
-
-            result.innerHTML = `
-                <div class="avatar small-avatar">
-                    ${escapeHtml(initials)}
-                </div>
-
-                <div class="suggestion-info">
-
-                    <div class="suggestion-name">
-                        ${escapeHtml(
-                            fullName || username
-                        )}
-                    </div>
-
-                    <div class="suggestion-email">
-                        ${escapeHtml(
-                            username
-                                ? "@" + username
-                                : email
-                        )}
-                    </div>
-
-                </div>
-            `;
-
-            result.addEventListener(
-                "click",
-                () => {
-
-                    openChat({
-                        uid:
-                            data.uid ||
-                            userDoc.id,
-
-                        name:
-                            fullName ||
-                            username ||
-                            "Používateľ",
-
-                        initials:
-                            initials
-                    });
-                }
-            );
-
-            suggestions.appendChild(result);
         });
 
-
-        if (!found) {
-
-            suggestions.innerHTML = `
-                <div class="no-results">
-                    Používateľ sa nenašiel.
-                </div>
-            `;
-        }
+        renderSuggestions(results);
 
     } catch (error) {
 
@@ -324,44 +313,144 @@ async function searchUsers(value) {
 
         suggestions.innerHTML = `
             <div class="no-results">
-                Vyhľadávanie sa nepodarilo.
+                Nepodarilo sa vyhľadať používateľov.
             </div>
         `;
+
+        suggestions.style.display =
+            "block";
     }
 }
 
 
-/* ==========================================
-   OTVORENIE CHATU
-========================================== */
+/* =========================
+   NAŠEPKÁVAČ
+========================= */
 
-async function openChat(user) {
+function renderSuggestions(users) {
 
-    selectedUser = user;
+    if (!users.length) {
 
-    welcome.style.display = "none";
-    chatWindow.style.display = "flex";
+        suggestions.innerHTML = `
+            <div class="no-results">
+                Používateľ sa nenašiel.
+            </div>
+        `;
+
+        suggestions.style.display =
+            "block";
+
+        return;
+    }
+
+    suggestions.innerHTML = `
+        <div class="suggestions-title">
+            POUŽÍVATELIA
+        </div>
+    `;
+
+    users.forEach((user) => {
+
+        const firstName =
+            user.firstName || "";
+
+        const lastName =
+            user.lastName || "";
+
+        const fullName =
+            `${firstName} ${lastName}`.trim();
+
+        const username =
+            user.username
+                ? `@${String(user.username).replace("@", "")}`
+                : "";
+
+        const avatar =
+            getInitials(firstName, lastName);
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "suggestion";
+
+        item.innerHTML = `
+            <div class="avatar small-avatar">
+                ${escapeHtml(avatar)}
+            </div>
+
+            <div class="suggestion-info">
+
+                <div class="suggestion-name">
+                    ${escapeHtml(fullName || "Používateľ")}
+                </div>
+
+                <div class="suggestion-username">
+                    ${escapeHtml(username)}
+                </div>
+
+                <div class="suggestion-email">
+                    ${escapeHtml(user.email || "")}
+                </div>
+
+            </div>
+        `;
+
+        item.addEventListener("click", () => {
+
+            openChat(user);
+
+        });
+
+        suggestions.appendChild(item);
+    });
+
+    suggestions.style.display =
+        "block";
+}
+
+
+/* =========================
+   OTVORIŤ CHAT
+========================= */
+
+function openChat(user) {
+
+    selectedUser =
+        user;
+
+    welcome.style.display =
+        "none";
+
+    chatWindow.style.display =
+        "flex";
 
     chatName.textContent =
-        user.name;
+        `${user.firstName || ""} ${user.lastName || ""}`.trim()
+        || "Používateľ";
 
     chatAvatar.textContent =
-        user.initials;
-
-    suggestions.style.display = "none";
-    suggestions.innerHTML = "";
+        getInitials(
+            user.firstName,
+            user.lastName
+        );
 
     searchInput.value = "";
 
-    await loadMessages();
+    suggestions.innerHTML = "";
+
+    suggestions.style.display =
+        "none";
+
+    loadMessages();
 
     messageInput.focus();
 }
 
 
-/* ==========================================
-   CHAT ID
-========================================== */
+/* =========================
+   ID CHATU
+========================= */
 
 function getChatId(uid1, uid2) {
 
@@ -374,16 +463,13 @@ function getChatId(uid1, uid2) {
 }
 
 
-/* ==========================================
-   NAČÍTANIE SPRÁV
-========================================== */
+/* =========================
+   SPRÁVY
+========================= */
 
-async function loadMessages() {
+function loadMessages() {
 
-    if (
-        !currentUser ||
-        !selectedUser
-    ) {
+    if (!selectedUser) {
         return;
     }
 
@@ -391,8 +477,15 @@ async function loadMessages() {
 
         unsubscribeMessages();
 
-        unsubscribeMessages = null;
+        unsubscribeMessages =
+            null;
     }
+
+    messages.innerHTML = `
+        <div class="loading">
+            Načítavam správy...
+        </div>
+    `;
 
     const chatId =
         getChatId(
@@ -411,10 +504,7 @@ async function loadMessages() {
     const messagesQuery =
         query(
             messagesRef,
-            orderBy(
-                "createdAt",
-                "asc"
-            )
+            orderBy("createdAt", "asc")
         );
 
     unsubscribeMessages =
@@ -429,7 +519,6 @@ async function loadMessages() {
                     messages.innerHTML = `
                         <div class="empty">
                             Zatiaľ žiadne správy.
-                            <br><br>
                             Napíš prvú správu.
                         </div>
                     `;
@@ -437,14 +526,13 @@ async function loadMessages() {
                     return;
                 }
 
-                snapshot.forEach(
-                    (messageDoc) => {
+                snapshot.forEach((messageDoc) => {
 
-                        renderMessage(
-                            messageDoc.data()
-                        );
-                    }
-                );
+                    const message =
+                        messageDoc.data();
+
+                    renderMessage(message);
+                });
 
                 messages.scrollTop =
                     messages.scrollHeight;
@@ -466,18 +554,17 @@ async function loadMessages() {
 }
 
 
-/* ==========================================
-   VYKRESLENIE SPRÁVY
-========================================== */
+/* =========================
+   ZOBRAZENIE SPRÁVY
+========================= */
 
-function renderMessage(data) {
+function renderMessage(message) {
 
     const element =
         document.createElement("div");
 
     const mine =
-        data.senderId ===
-        currentUser.uid;
+        message.senderId === currentUser.uid;
 
     element.className =
         mine
@@ -486,65 +573,50 @@ function renderMessage(data) {
 
     let html = "";
 
+    if (message.fileUrl) {
 
-    /* PRÍLOHA */
-
-    if (data.fileUrl) {
+        const fileName =
+            message.fileName || "Príloha";
 
         html += `
             <div class="message-file">
                 📎
-
                 <a
-                    href="${escapeAttribute(
-                        data.fileUrl
-                    )}"
+                    href="${escapeAttribute(message.fileUrl)}"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    ${escapeHtml(
-                        data.fileName ||
-                        "Príloha"
-                    )}
+                    ${escapeHtml(fileName)}
                 </a>
             </div>
         `;
     }
 
-
-    /* TEXT */
-
-    if (data.text) {
+    if (message.text) {
 
         html += `
             <div class="message-text">
-                ${escapeHtml(
-                    data.text
-                )}
+                ${escapeHtml(message.text)}
             </div>
         `;
     }
 
-
-    /* ČAS */
-
     html += `
         <div class="message-time">
-            ${formatTime(
-                data.createdAt
-            )}
+            ${formatTime(message.createdAt)}
         </div>
     `;
 
-    element.innerHTML = html;
+    element.innerHTML =
+        html;
 
     messages.appendChild(element);
 }
 
 
-/* ==========================================
-   ODOSLANIE TEXTOVEJ SPRÁVY
-========================================== */
+/* =========================
+   ODOSLANIE SPRÁVY
+========================= */
 
 messageForm.addEventListener(
     "submit",
@@ -566,21 +638,24 @@ messageForm.addEventListener(
             return;
         }
 
-        const chatId =
-            getChatId(
-                currentUser.uid,
-                selectedUser.uid
-            );
-
         try {
 
-            await addDoc(
+            const chatId =
+                getChatId(
+                    currentUser.uid,
+                    selectedUser.uid
+                );
+
+            const messagesRef =
                 collection(
                     db,
                     "chats",
                     chatId,
                     "messages"
-                ),
+                );
+
+            await addDoc(
+                messagesRef,
                 {
                     text: text,
 
@@ -607,7 +682,7 @@ messageForm.addEventListener(
         } catch (error) {
 
             console.error(
-                "Chyba odoslania:",
+                "Chyba odosielania správy:",
                 error
             );
 
@@ -619,9 +694,9 @@ messageForm.addEventListener(
 );
 
 
-/* ==========================================
-   PRÍLOHY
-========================================== */
+/* =========================
+   PRÍLOHA
+========================= */
 
 attachBtn.addEventListener(
     "click",
@@ -630,7 +705,7 @@ attachBtn.addEventListener(
         if (!selectedUser) {
 
             alert(
-                "Najprv otvor chat."
+                "Najprv vyber používateľa."
             );
 
             return;
@@ -648,8 +723,11 @@ fileInput.addEventListener(
         const file =
             fileInput.files[0];
 
+        if (!file) {
+            return;
+        }
+
         if (
-            !file ||
             !currentUser ||
             !selectedUser
         ) {
@@ -657,6 +735,15 @@ fileInput.addEventListener(
         }
 
         try {
+
+            attachBtn.disabled =
+                true;
+
+            const chatId =
+                getChatId(
+                    currentUser.uid,
+                    selectedUser.uid
+                );
 
             const safeName =
                 file.name.replace(
@@ -667,37 +754,40 @@ fileInput.addEventListener(
             const filePath =
                 `chatFiles/${currentUser.uid}/${Date.now()}_${safeName}`;
 
-            const fileRef =
+            const storageRef =
                 ref(
                     storage,
                     filePath
                 );
 
             await uploadBytes(
-                fileRef,
+                storageRef,
                 file
             );
 
             const fileUrl =
                 await getDownloadURL(
-                    fileRef
+                    storageRef
                 );
 
-            const chatId =
-                getChatId(
-                    currentUser.uid,
-                    selectedUser.uid
-                );
-
-            await addDoc(
+            const messagesRef =
                 collection(
                     db,
                     "chats",
                     chatId,
                     "messages"
-                ),
+                );
+
+            await addDoc(
+                messagesRef,
                 {
                     text: "",
+
+                    senderId:
+                        currentUser.uid,
+
+                    receiverId:
+                        selectedUser.uid,
 
                     fileUrl:
                         fileUrl,
@@ -706,16 +796,10 @@ fileInput.addEventListener(
                         file.name,
 
                     fileType:
-                        file.type,
+                        file.type || "unknown",
 
                     fileSize:
                         file.size,
-
-                    senderId:
-                        currentUser.uid,
-
-                    receiverId:
-                        selectedUser.uid,
 
                     createdAt:
                         serverTimestamp()
@@ -724,7 +808,7 @@ fileInput.addEventListener(
 
             await updateChatInfo(
                 chatId,
-                "📎 Príloha"
+                `📎 ${file.name}`
             );
 
             fileInput.value = "";
@@ -740,189 +824,234 @@ fileInput.addEventListener(
                 "Prílohu sa nepodarilo odoslať."
             );
 
-            fileInput.value = "";
+        } finally {
+
+            attachBtn.disabled =
+                false;
         }
     }
 );
 
 
-/* ==========================================
-   AKTUALIZÁCIA CHATU
-========================================== */
+/* =========================
+   INFO O CHATE
+========================= */
 
 async function updateChatInfo(
     chatId,
     lastMessage
 ) {
 
-    try {
-
-        await setDoc(
-            doc(
-                db,
-                "chats",
-                chatId
-            ),
-            {
-                participants: [
-                    currentUser.uid,
-                    selectedUser.uid
-                ],
-
-                lastMessage:
-                    lastMessage,
-
-                lastMessageAt:
-                    serverTimestamp()
-            },
-            {
-                merge: true
-            }
+    const chatRef =
+        doc(
+            db,
+            "chats",
+            chatId
         );
 
-    } catch (error) {
+    await setDoc(
+        chatRef,
+        {
+            participants: [
+                currentUser.uid,
+                selectedUser.uid
+            ],
 
-        console.error(
-            "Chyba aktualizácie chatu:",
-            error
-        );
-    }
+            lastMessage:
+                lastMessage,
+
+            lastMessageAt:
+                serverTimestamp()
+        },
+        {
+            merge: true
+        }
+    );
 }
 
 
-/* ==========================================
+/* =========================
    ZOZNAM CHATOV
-========================================== */
+========================= */
 
 function loadChats() {
 
-    if (!currentUser) {
-        return;
-    }
-
     if (unsubscribeChats) {
+
         unsubscribeChats();
-    }
-
-    try {
-
-        const chatsQuery =
-            query(
-                collection(
-                    db,
-                    "chats"
-                ),
-                where(
-                    "participants",
-                    "array-contains",
-                    currentUser.uid
-                ),
-                orderBy(
-                    "lastMessageAt",
-                    "desc"
-                )
-            );
 
         unsubscribeChats =
-            onSnapshot(
-                chatsQuery,
-                async (snapshot) => {
+            null;
+    }
 
-                    chatList.innerHTML = "";
+    const chatsRef =
+        collection(db, "chats");
 
-                    if (snapshot.empty) {
+    const chatsQuery =
+        query(
+            chatsRef,
+            where(
+                "participants",
+                "array-contains",
+                currentUser.uid
+            ),
+            orderBy(
+                "lastMessageAt",
+                "desc"
+            )
+        );
 
-                        chatList.innerHTML = `
-                            <div class="empty">
-                                Zatiaľ nemáš žiadne chaty.
-                                <br><br>
-                                Vyhľadaj používateľa hore.
-                            </div>
-                        `;
+    unsubscribeChats =
+        onSnapshot(
+            chatsQuery,
+            async (snapshot) => {
 
-                        return;
+                chatList.innerHTML = "";
+
+                if (snapshot.empty) {
+
+                    chatList.innerHTML = `
+                        <div class="empty">
+                            Zatiaľ nemáš žiadne chaty.
+                            <br><br>
+                            Vyhľadaj používateľa vyššie.
+                        </div>
+                    `;
+
+                    return;
+                }
+
+                for (
+                    const chatDoc of snapshot.docs
+                ) {
+
+                    const chat =
+                        chatDoc.data();
+
+                    const otherUid =
+                        chat.participants.find(
+                            uid =>
+                                uid !== currentUser.uid
+                        );
+
+                    if (!otherUid) {
+                        continue;
                     }
 
-                    for (
-                        const chatDoc of snapshot.docs
-                    ) {
+                    try {
 
-                        const data =
-                            chatDoc.data();
-
-                        const otherUid =
-                            data.participants.find(
-                                uid =>
-                                    uid !==
-                                    currentUser.uid
+                        const userSnap =
+                            await getDoc(
+                                doc(
+                                    db,
+                                    "users",
+                                    otherUid
+                                )
                             );
 
-                        if (!otherUid) {
+                        if (!userSnap.exists()) {
                             continue;
                         }
 
-                        try {
+                        const user =
+                            userSnap.data();
 
-                            const userSnapshot =
-                                await getDoc(
-                                    doc(
-                                        db,
-                                        "users",
-                                        otherUid
-                                    )
-                                );
+                        renderChatItem(
+                            user,
+                            chat
+                        );
 
-                            if (
-                                !userSnapshot.exists()
-                            ) {
-                                continue;
-                            }
+                    } catch (error) {
 
-                            const user =
-                                userSnapshot.data();
-
-                            const name =
-                                `${user.firstName || ""} ${user.lastName || ""}`.trim();
-
-                            const displayName =
-                                name ||
-                                user.username ||
-                                "Používateľ";
-
-                            const initials =
-                                getInitials(
-                                    displayName
-                                );
-
-                            const chat =
-                                document.createElement(
-                                    "div"
-                                );
-
-                            chat.className =
-                                "chat";
-
-                            chatList.innerHTML = `
-                        <div class="empty">
-                            Chaty sa nepodarilo načítať.
-                        </div>
-                    `;
+                        console.error(
+                            "Chyba používateľa:",
+                            error
+                        );
+                    }
                 }
-            );
+            },
+            (error) => {
 
-    } catch (error) {
+                console.error(
+                    "Chyba načítania chatov:",
+                    error
+                );
 
-        console.error(
-            "Chyba načítania chatov:",
-            error
+                chatList.innerHTML = `
+                    <div class="empty">
+                        Chaty sa nepodarilo načítať.
+                    </div>
+                `;
+            }
         );
-    }
 }
 
 
-/* ==========================================
+/* =========================
+   CHAT V ZOZNAME
+========================= */
+
+function renderChatItem(
+    user,
+    chat
+) {
+
+    const element =
+        document.createElement("div");
+
+    element.className =
+        "chat";
+
+    const fullName =
+        `${user.firstName || ""} ${user.lastName || ""}`.trim()
+        || "Používateľ";
+
+    const initials =
+        getInitials(
+            user.firstName,
+            user.lastName
+        );
+
+    element.innerHTML = `
+        <div class="avatar">
+            ${escapeHtml(initials)}
+        </div>
+
+        <div class="chat-info">
+
+            <div class="chat-name">
+                ${escapeHtml(fullName)}
+            </div>
+
+            <div class="last-message">
+                ${escapeHtml(chat.lastMessage || "")}
+            </div>
+
+        </div>
+
+        <div class="time">
+            ${formatTime(chat.lastMessageAt)}
+        </div>
+    `;
+
+    element.addEventListener(
+        "click",
+        () => {
+
+            openChat({
+                uid: user.uid,
+                ...user
+            });
+        }
+    );
+
+    chatList.appendChild(element);
+}
+
+
+/* =========================
    PROFIL
-========================================== */
+========================= */
 
 profileBtn.addEventListener(
     "click",
@@ -945,23 +1074,15 @@ profileBtn.addEventListener(
 );
 
 
-/* ==========================================
+/* =========================
    ODHLÁSENIE
-========================================== */
+========================= */
 
 logoutBtn.addEventListener(
     "click",
     async () => {
 
         try {
-
-            if (unsubscribeMessages) {
-                unsubscribeMessages();
-            }
-
-            if (unsubscribeChats) {
-                unsubscribeChats();
-            }
 
             await signOut(auth);
 
@@ -971,21 +1092,21 @@ logoutBtn.addEventListener(
         } catch (error) {
 
             console.error(
-                "Odhlásenie:",
+                "Chyba odhlásenia:",
                 error
             );
 
             alert(
-                "Odhlásenie sa nepodarilo."
+                "Nepodarilo sa odhlásiť."
             );
         }
     }
 );
 
 
-/* ==========================================
+/* =========================
    VOLANIE
-========================================== */
+========================= */
 
 callBtn.addEventListener(
     "click",
@@ -994,7 +1115,7 @@ callBtn.addEventListener(
         if (!selectedUser) {
 
             alert(
-                "Najprv otvor chat."
+                "Najprv vyber používateľa."
             );
 
             return;
@@ -1021,8 +1142,7 @@ callModal.addEventListener(
     (event) => {
 
         if (
-            event.target ===
-            callModal
+            event.target === callModal
         ) {
 
             callModal.style.display =
@@ -1032,9 +1152,9 @@ callModal.addEventListener(
 );
 
 
-/* ==========================================
-   SKRYTIE NAŠEPKÁVAČA
-========================================== */
+/* =========================
+   KLIKNUTIE MIMO NAŠEPKÁVAČA
+========================= */
 
 document.addEventListener(
     "click",
@@ -1053,35 +1173,65 @@ document.addEventListener(
 );
 
 
-/* ==========================================
+/* =========================
+   ENTER V SPRÁVE
+========================= */
+
+messageInput.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+
+            event.preventDefault();
+
+            messageForm.requestSubmit();
+        }
+    }
+);
+
+
+/* =========================
    POMOCNÉ FUNKCIE
-========================================== */
+========================= */
 
-function getInitials(name) {
+function getInitials(
+    firstName = "",
+    lastName = ""
+) {
 
-    return name
-        .split(" ")
-        .filter(Boolean)
-        .map(
-            word =>
-                word.charAt(0)
-        )
-        .join("")
-        .substring(0, 2)
-        .toUpperCase() || "N";
+    const first =
+        firstName
+            .trim()
+            .charAt(0);
+
+    const last =
+        lastName
+            .trim()
+            .charAt(0);
+
+    return (
+        `${first}${last}`.toUpperCase()
+        || "N"
+    );
 }
 
 
 function formatTime(timestamp) {
 
     if (!timestamp) {
-        return "teraz";
+        return "";
     }
 
     try {
 
         const date =
-            timestamp.toDate();
+            timestamp.toDate
+                ? timestamp.toDate()
+                : new Date(timestamp);
 
         return date.toLocaleTimeString(
             "sk-SK",
@@ -1093,22 +1243,19 @@ function formatTime(timestamp) {
 
     } catch {
 
-        return "teraz";
+        return "";
     }
 }
 
 
-function escapeHtml(text) {
+function escapeHtml(value) {
 
-    const div =
-        document.createElement(
-            "div"
-        );
-
-    div.textContent =
-        String(text ?? "");
-
-    return div.innerHTML;
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 
